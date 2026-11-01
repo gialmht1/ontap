@@ -17,7 +17,7 @@
     <header class="bg-blue-700 text-white shadow-lg sticky top-0 z-50">
         <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
             <div>
-                <h1 class="text-lg font-bold">AVCN Điện (HUIT)</h1>
+                <h1 class="text-lg font-bold">AVCN Điện - Đề 2 (HUIT)</h1>
                 <p class="text-xs text-blue-200">187 Câu Trắc Nghiệm - Luyện tập & Thi thử</p>
             </div>
             <div class="flex gap-2">
@@ -36,13 +36,13 @@
                     <span class="text-sm font-semibold text-slate-700">Chế độ:</span>
                     <select id="modeSelect" onchange="changeMode()" class="bg-slate-100 border border-slate-300 text-sm rounded-lg p-2 font-medium">
                         <option value="practice">Luyện tập (Từng câu)</option>
-                        <option value="exam">Thi thử (Có tính giờ)</option>
+                        <option value="exam">Thi thử (50 câu / 60 phút)</option>
                         <option value="study">Tra cứu tất cả (187 câu)</option>
                     </select>
                 </div>
 
                 <!-- Filter by CLO -->
-                <div class="flex items-center gap-2">
+                <div id="cloFilterContainer" class="flex items-center gap-2">
                     <span class="text-sm font-semibold text-slate-700">Lọc CLO:</span>
                     <select id="cloSelect" onchange="filterByClo()" class="bg-slate-100 border border-slate-300 text-sm rounded-lg p-2 font-medium">
                         <option value="ALL">Tất cả CLO</option>
@@ -52,7 +52,7 @@
                     </select>
                 </div>
                 
-                <div class="flex items-center gap-4 text-sm font-medium">
+                <div id="settingsContainer" class="flex items-center gap-4 text-sm font-medium">
                     <label class="flex items-center gap-2 cursor-pointer">
                         <input type="checkbox" id="shuffleQuestions" class="w-4 h-4 text-blue-600 rounded">
                         <span>Đảo câu hỏi</span>
@@ -70,9 +70,9 @@
 
         <!-- Exam Timer Bar -->
         <div id="examHeader" class="hidden bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-xl mb-4 flex justify-between items-center font-bold text-sm">
-            <span><i class="fas fa-clock mr-2"></i> Thời gian làm bài:</span>
-            <span id="timerDisplay" class="text-lg text-red-600">45:00</span>
-            <button onclick="submitExam()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-1.5 rounded-lg text-xs">Nộp bài</button>
+            <span><i class="fas fa-clock mr-2 text-amber-600"></i> Thời gian làm bài:</span>
+            <span id="timerDisplay" class="text-lg font-bold text-red-600">60:00</span>
+            <button onclick="submitExam()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow">Nộp bài ngay</button>
         </div>
 
         <!-- Practice & Exam View -->
@@ -114,9 +114,9 @@
         <div id="resultView" class="hidden space-y-6">
             <div class="bg-white rounded-xl shadow-sm p-8 text-center space-y-4 border border-slate-200">
                 <h2 class="text-2xl font-bold text-slate-900">KẾT QUẢ THI THỬ</h2>
-                <div id="scoreDisplay" class="text-4xl font-extrabold text-blue-600">0 / 0</div>
-                <p id="scoreComment" class="text-slate-600 text-sm"></p>
-                <button onclick="resetExam()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm">Làm lại bài thi</button>
+                <div id="scoreDisplay" class="text-4xl font-extrabold text-blue-600">0 / 50</div>
+                <p id="scoreComment" class="text-slate-600 text-sm font-medium"></p>
+                <button onclick="resetExam()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow">Thi thử đề mới (50 câu khác)</button>
             </div>
             
             <!-- Detailed Review Container -->
@@ -334,7 +334,7 @@
         let currentIndex = 0;
         let userAnswers = {};
         let examTimer = null;
-        let timeLeft = 45 * 60;
+        let timeLeft = 60 * 60; // 60 phút
 
         function init() {
             filterByClo();
@@ -392,7 +392,6 @@
             container.innerHTML = '';
 
             const selected = userAnswers[currentIndex];
-            const mode = document.getElementById('modeSelect').value;
             const labels = ['A', 'B', 'C', 'D'];
 
             q.opt.forEach((optText, idx) => {
@@ -400,15 +399,10 @@
                 const btn = document.createElement('button');
                 btn.className = `w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-blue-400 transition flex items-start gap-3 bg-white font-medium text-slate-800 text-sm sm:text-base`;
                 
+                // Hiển thị ngay đáp án đúng / sai khi chọn ở TẤT CẢ các chế độ
                 if (selected !== undefined) {
-                    if (mode !== 'exam') {
-                        if (optText === q.ans) btn.classList.add('correct-option');
-                        else if (idx === selected) btn.classList.add('incorrect-option');
-                    } else {
-                        if (idx === selected) btn.classList.add('selected-option');
-                    }
-                } else if (idx === selected) {
-                    btn.classList.add('selected-option');
+                    if (optText === q.ans) btn.classList.add('correct-option');
+                    else if (idx === selected) btn.classList.add('incorrect-option');
                 }
 
                 btn.onclick = () => selectOption(idx, optText);
@@ -419,8 +413,9 @@
                 container.appendChild(btn);
             });
 
+            // Hiện giải thích tiếng Việt ngay khi bấm chọn
             const expBox = document.getElementById('explanationBox');
-            if (selected !== undefined && mode !== 'exam') {
+            if (selected !== undefined) {
                 expBox.classList.remove('hidden');
                 document.getElementById('correctAnswerTitle').innerText = `Đáp án đúng: ${q.ans}`;
                 document.getElementById('explanationText').innerText = q.exp;
@@ -433,6 +428,7 @@
         }
 
         function selectOption(optIndex, optText) {
+            if (userAnswers[currentIndex] !== undefined) return; // Khóa sau khi chọn
             userAnswers[currentIndex] = optIndex;
             renderQuestion();
             renderGrid();
@@ -451,6 +447,8 @@
             const practiceView = document.getElementById('practiceView');
             const studyView = document.getElementById('studyView');
             const resultView = document.getElementById('resultView');
+            const cloFilterContainer = document.getElementById('cloFilterContainer');
+            const settingsContainer = document.getElementById('settingsContainer');
 
             clearInterval(examTimer);
             resultView.classList.add('hidden');
@@ -459,11 +457,24 @@
                 examHeader.classList.add('hidden');
                 practiceView.classList.add('hidden');
                 studyView.classList.remove('hidden');
+                cloFilterContainer.classList.remove('hidden');
+                settingsContainer.classList.remove('hidden');
                 renderStudyView();
             } else if (mode === 'exam') {
                 examHeader.classList.remove('hidden');
                 studyView.classList.add('hidden');
                 practiceView.classList.remove('hidden');
+                cloFilterContainer.classList.add('hidden');
+                settingsContainer.classList.add('hidden');
+                
+                // Lấy ngẫu nhiên 50 câu từ 187 câu cho bài thi thử
+                let shuffled = JSON.parse(JSON.stringify(RAW_DATA));
+                shuffled.sort(() => Math.random() - 0.5);
+                currentQuestions = shuffled.slice(0, 50);
+                
+                // Đảo ngẫu nhiên các phương án chọn
+                currentQuestions.forEach(q => q.opt.sort(() => Math.random() - 0.5));
+
                 startExamTimer();
                 userAnswers = {};
                 currentIndex = 0;
@@ -473,15 +484,14 @@
                 examHeader.classList.add('hidden');
                 studyView.classList.add('hidden');
                 practiceView.classList.remove('hidden');
-                userAnswers = {};
-                currentIndex = 0;
-                renderQuestion();
-                renderGrid();
+                cloFilterContainer.classList.remove('hidden');
+                settingsContainer.classList.remove('hidden');
+                filterByClo();
             }
         }
 
         function startExamTimer() {
-            timeLeft = currentQuestions.length * 60;
+            timeLeft = 60 * 60; // 60 phút
             updateTimerDisplay();
             examTimer = setInterval(() => {
                 timeLeft--;
@@ -516,11 +526,11 @@
             
             document.getElementById('scoreDisplay').innerText = `${correctCount} / ${currentQuestions.length}`;
             const percent = (correctCount / currentQuestions.length) * 100;
-            document.getElementById('scoreComment').innerText = percent >= 80 ? "Xuất sắc! Đạt điểm cao." : percent >= 50 ? "Khá tốt, cần ôn thêm một chút." : "Cần cố gắng ôn tập kỹ hơn nhé!";
+            document.getElementById('scoreComment').innerText = percent >= 80 ? "Xuất sắc! Đạt điểm rất cao." : percent >= 50 ? "Khá tốt, đạt điểm đậu rồi nhé!" : "Cần cố gắng ôn luyện thêm!";
 
-            // Render Detailed Review
+            // Render Review toàn bộ 50 câu thi thử
             const reviewContainer = document.getElementById('reviewContainer');
-            reviewContainer.innerHTML = '<h3 class="font-bold text-lg text-slate-800 mt-6 mb-3">Chi tiết đáp án từng câu:</h3>';
+            reviewContainer.innerHTML = '<h3 class="font-bold text-lg text-slate-800 mt-6 mb-3">Tổng kết chi tiết 50 câu thi thử:</h3>';
             const labels = ['A', 'B', 'C', 'D'];
 
             currentQuestions.forEach((q, idx) => {
@@ -547,7 +557,7 @@
                 card.innerHTML = `
                     <div class="flex justify-between items-center text-xs font-bold">
                         <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded">${q.clo}</span>
-                        <span class="${isCorrect ? 'text-emerald-600' : 'text-rose-600'}"><i class="fas ${isCorrect ? 'fa-check-circle' : 'fa-times-circle'} mr-1"></i> Câu ${idx + 1} (${isCorrect ? 'Đúng' : 'Sai'})</span>
+                        <span class="${isCorrect ? 'text-emerald-600' : 'text-rose-600'}"><i class="fas ${isCorrect ? 'fa-check-circle' : 'fa-times-circle'} mr-1"></i> Câu ${idx + 1} (${isCorrect ? 'Đúng' : 'Sai / Bỏ qua'})</span>
                     </div>
                     <h4 class="font-bold text-slate-900 text-sm sm:text-base">${q.q}</h4>
                     <div class="space-y-1.5 pt-1">${optsHtml}</div>
