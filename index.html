@@ -68,7 +68,7 @@
             </div>
         </div>
 
-        <!-- Exam Timer Bar (Hidden by default) -->
+        <!-- Exam Timer Bar -->
         <div id="examHeader" class="hidden bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-xl mb-4 flex justify-between items-center font-bold text-sm">
             <span><i class="fas fa-clock mr-2"></i> Thời gian làm bài:</span>
             <span id="timerDisplay" class="text-lg text-red-600">45:00</span>
@@ -108,16 +108,21 @@
         </div>
 
         <!-- Study View (All questions) -->
-        <div id="studyView" class="hidden space-y-4">
-            <!-- Questions list injected here -->
-        </div>
+        <div id="studyView" class="hidden space-y-4"></div>
 
         <!-- Exam Result View -->
-        <div id="resultView" class="hidden bg-white rounded-xl shadow-sm p-8 text-center space-y-4 border border-slate-200">
-            <h2 class="text-2xl font-bold text-slate-900">KẾT QUẢ THI THỬ</h2>
-            <div id="scoreDisplay" class="text-4xl font-extrabold text-blue-600">0 / 0</div>
-            <p id="scoreComment" class="text-slate-600 text-sm"></p>
-            <button onclick="resetExam()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm">Làm lại bài thi</button>
+        <div id="resultView" class="hidden space-y-6">
+            <div class="bg-white rounded-xl shadow-sm p-8 text-center space-y-4 border border-slate-200">
+                <h2 class="text-2xl font-bold text-slate-900">KẾT QUẢ THI THỬ</h2>
+                <div id="scoreDisplay" class="text-4xl font-extrabold text-blue-600">0 / 0</div>
+                <p id="scoreComment" class="text-slate-600 text-sm"></p>
+                <button onclick="resetExam()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm">Làm lại bài thi</button>
+            </div>
+            
+            <!-- Detailed Review Container -->
+            <div id="reviewContainer" class="space-y-4">
+                <!-- Review cards injected here -->
+            </div>
         </div>
     </main>
 
@@ -130,9 +135,7 @@
                     <i class="fas fa-times text-xl"></i>
                 </button>
             </div>
-            <div id="gridContainer" class="p-4 overflow-y-auto grid grid-cols-5 sm:grid-cols-10 gap-2">
-                <!-- Grid buttons injected here -->
-            </div>
+            <div id="gridContainer" class="p-4 overflow-y-auto grid grid-cols-5 sm:grid-cols-10 gap-2"></div>
         </div>
     </div>
 
@@ -308,7 +311,7 @@
             { id: 168, clo: "CLO3", q: "Lighting poles in a TT system are earthed collectively. The neutral insulation of pole A fails and touches the pole's metal; then the phase insulation of pole B fails. Which device clears this double fault?", opt: ["The overcurrent device", "The RCD alone", "No device can clear it", "The isolating transformer"], ans: "The overcurrent device", exp: "Sự cố kép giữa dây trung tính và dây pha được ngắt bởi Thiết bị bảo vệ quá dòng (Overcurrent device)." },
             { id: 169, clo: "CLO3", q: "The patient vicinity extends how far beyond the perimeter of the bed?", opt: ["1.25 m", "1.83 m", "2.29 m", "2.5 m"], ans: "1.5 m", exp: "Vùng lân cận bệnh nhân mở rộng khoảng 1.5m quanh giường bệnh." },
             { id: 170, clo: "CLO3", q: "A boat's hull is connected to the dockside earth by a protective conductor. Why may the RCD's clearing time be dangerous for swimmers?", opt: ["The energized hull drives part of the fault current through the seawater", "The RCD never trips in a marina", "Seawater is a perfect insulator", "The hull is electrically separated from the shore"], ans: "The energized hull drives part of the fault current through the seawater", exp: "Vỏ tàu mang điện truyền một phần dòng rò qua nước biển gây nguy hiểm cho người bơi." },
-            { id: 171, clo: "CLO3", q: "Why may the radio frequency input filters of computers cause nuisance tripping of RCDs?", opt: ["They cause continuous leakage currents through the protective conductors", "They short-circuit the phase to the neutral", "They raise the supply voltage", "They disconnect the protective conductor"], ans: "The leakage currents through protective conductors", exp: "Bộ lọc nhiễu RF gây ra dòng điện rò liên tục qua dây bảo vệ PE làm RCD bị nhảy nhầm." },
+            { id: 171, clo: "CLO3", q: "Why may the radio frequency input filters of computers cause nuisance tripping of RCDs?", opt: ["They cause continuous leakage currents through the protective conductors", "They short-circuit the phase to the neutral", "They raise the supply voltage", "They disconnect the protective conductor"], ans: "They cause continuous leakage currents through the protective conductors", exp: "Bộ lọc nhiễu RF gây ra dòng điện rò liên tục qua dây bảo vệ PE làm RCD bị nhảy nhầm." },
             { id: 172, clo: "CLO3", q: "Identify the sentence type: \"Obstacles offer only a limited degree of protection, so they are used only in areas accessible to skilled persons.\"", opt: ["Simple sentence", "Compound sentence", "Complex sentence", "Imperative sentence"], ans: "Compound sentence", exp: "Câu ghép (Compound sentence) dùng từ nối 'so'." },
             { id: 173, clo: "CLO3", q: "An enclosure is marked IP54. What does the 4 mean?", opt: ["It is dust-tight", "It resists splashing water from any direction", "It withstands 4 joules of impact", "It refuses a 4 mm object"], ans: "It resists splashing water from any direction", exp: "Chữ số 4 ở vị trí thứ 2 trong IP54 nghĩa là Chống nước bắn từ mọi hướng." },
             { id: 174, clo: "CLO3", q: "An isolating transformer stops corrosion of a boat's hull because it", opt: ["removes the metal connection between hull and shore electrode", "lowers the supply voltage", "earths the hull more firmly", "filters out the direct current"], ans: "removes the metal connection between hull and shore electrode", exp: "Biến áp cách ly loại bỏ kết nối kim loại trực tiếp giữa vỏ tàu và đất bờ." },
@@ -331,7 +334,7 @@
         let currentIndex = 0;
         let userAnswers = {};
         let examTimer = null;
-        let timeLeft = 45 * 60; // 45 phút
+        let timeLeft = 45 * 60;
 
         function init() {
             filterByClo();
@@ -416,7 +419,6 @@
                 container.appendChild(btn);
             });
 
-            // Explanation Box
             const expBox = document.getElementById('explanationBox');
             if (selected !== undefined && mode !== 'exam') {
                 expBox.classList.remove('hidden');
@@ -479,7 +481,7 @@
         }
 
         function startExamTimer() {
-            timeLeft = currentQuestions.length * 60; // 1 phút / câu
+            timeLeft = currentQuestions.length * 60;
             updateTimerDisplay();
             examTimer = setInterval(() => {
                 timeLeft--;
@@ -515,6 +517,46 @@
             document.getElementById('scoreDisplay').innerText = `${correctCount} / ${currentQuestions.length}`;
             const percent = (correctCount / currentQuestions.length) * 100;
             document.getElementById('scoreComment').innerText = percent >= 80 ? "Xuất sắc! Đạt điểm cao." : percent >= 50 ? "Khá tốt, cần ôn thêm một chút." : "Cần cố gắng ôn tập kỹ hơn nhé!";
+
+            // Render Detailed Review
+            const reviewContainer = document.getElementById('reviewContainer');
+            reviewContainer.innerHTML = '<h3 class="font-bold text-lg text-slate-800 mt-6 mb-3">Chi tiết đáp án từng câu:</h3>';
+            const labels = ['A', 'B', 'C', 'D'];
+
+            currentQuestions.forEach((q, idx) => {
+                const userOptIdx = userAnswers[idx];
+                const userAnsText = userOptIdx !== undefined ? q.opt[userOptIdx] : "Chưa chọn";
+                const isCorrect = userAnsText === q.ans;
+
+                const card = document.createElement('div');
+                card.className = `p-5 rounded-xl border shadow-sm space-y-2 ${isCorrect ? 'bg-emerald-50/50 border-emerald-200' : 'bg-rose-50/50 border-rose-200'}`;
+
+                let optsHtml = q.opt.map((o, i) => {
+                    let style = "bg-slate-50 text-slate-700";
+                    let icon = "";
+                    if (o === q.ans) {
+                        style = "bg-emerald-100 text-emerald-900 font-bold border border-emerald-300";
+                        icon = '<i class="fas fa-check ml-1 text-emerald-600"></i>';
+                    } else if (i === userOptIdx && !isCorrect) {
+                        style = "bg-rose-100 text-rose-900 font-bold border border-rose-300";
+                        icon = '<i class="fas fa-times ml-1 text-rose-600"></i>';
+                    }
+                    return `<div class="p-2 rounded-lg text-sm ${style}">${labels[i]}. ${o} ${icon}</div>`;
+                }).join('');
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-center text-xs font-bold">
+                        <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded">${q.clo}</span>
+                        <span class="${isCorrect ? 'text-emerald-600' : 'text-rose-600'}"><i class="fas ${isCorrect ? 'fa-check-circle' : 'fa-times-circle'} mr-1"></i> Câu ${idx + 1} (${isCorrect ? 'Đúng' : 'Sai'})</span>
+                    </div>
+                    <h4 class="font-bold text-slate-900 text-sm sm:text-base">${q.q}</h4>
+                    <div class="space-y-1.5 pt-1">${optsHtml}</div>
+                    <div class="bg-blue-50 text-blue-900 text-xs p-3 rounded-lg mt-2">
+                        <strong>Giải thích:</strong> ${q.exp}
+                    </div>
+                `;
+                reviewContainer.appendChild(card);
+            });
         }
 
         function resetExam() {
